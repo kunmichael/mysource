@@ -13,6 +13,7 @@
 
 //login route
 Route::get('/', 'LoginController@index');
+Route::get('/mytest', 'LoginController@test');
 Route::get('/login', 'LoginController@index');
 Route::get('/excel', 'LoginController@excel');
 Route::get('/signout', 'LoginController@signout');

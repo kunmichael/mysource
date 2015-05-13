@@ -11,6 +11,29 @@ class AbsentController extends Controller {
 		$this->middleware('guest');
 	}
 
+	public function test(){
+		//check apakah ada session mengenai data user
+		if(Session::has('user_login_data')){
+			//create object Project
+			$project_object = new \App\Model\Project();
+			$absent_object = new \App\Model\Absent();
+			$exploded_date = explode('-',Carbon::now('Asia/Jakarta')->toDateString());
+			$array = array($exploded_date[2],$exploded_date[1],$exploded_date[0]);
+			$today_date = implode('-',$array);
+
+			$data = array(
+								'data_project' => $project_object::orderBy('Tanggal_mulai', 'desc')->get(),
+								'data_absent_json' => $absent_object::where('Tanggal_absen','=',Carbon::now('Asia/Jakarta')->toDateString())->where('Karyawan_ID','=',Session::get('user_login_data')->Karyawan_ID)->get()->toJson(),
+								'today_date' => $today_date,
+							);
+			return View::make('pages.absent', $data);
+		}
+		else{
+			Session::put('error_login', "You must login !");
+			return Redirect::to("login");
+		}
+	}
+
 	public function index()
 	{
 		//check apakah ada session mengenai data user
